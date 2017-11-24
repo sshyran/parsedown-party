@@ -12,5 +12,6 @@ License: GPLv2
 
 
 require_once( __DIR__ . '/inc/class-parsedownparty.php' ); // TODO: Use autoloader
+require_once( __DIR__ . '/vendor/autoload.php' );
 
 add_action( 'init', [ '\Kizu514\ParsedownParty', 'init' ] );
