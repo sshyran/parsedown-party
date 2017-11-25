@@ -1,7 +1,5 @@
 # Parsedown Party
 
-Markdown editing for WordPress.
-
 [![Build Status](https://travis-ci.org/connerbw/parsedownparty.svg?branch=master)](https://travis-ci.org/connerbw/parsedownparty) [![Code Coverage](https://codecov.io/gh/connerbw/parsedownparty/branch/master/graph/badge.svg)](https://codecov.io/gh/connerbw/parsedownparty) 
 
 **Contributors:** conner_bw  
@@ -11,12 +9,18 @@ Markdown editing for WordPress.
 **Requires PHP:** 5.6  
 **Stable tag:** trunk  
 **License:** GPLv2  
-**License URI:** https://www.gnu.org/licenses/gpl-2.0.en.html  
+**License URI:** https://www.gnu.org/licenses/gpl-2.0.en.html
+
+Markdown editing for WordPress.  
 
 ## Description 
 
 This plugin lets you use [Markdown](https://github.com/erusev/parsedown) for individual posts on a case-by-case basis. Markdown can be activated using a toggle in the post editor
 submit box. When enabled, it replaces the WordPress post editor with CodeMirror in Markdown mode.
+
+## Screenshots 
+
+![Screenshot 1](screenshot-1.png "Parsedown Party in the post editor.")
 
 
 ## Frequently Asked Questions 

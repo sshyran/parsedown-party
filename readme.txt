@@ -16,6 +16,10 @@ Markdown editing for WordPress.
 This plugin lets you use [Markdown](https://github.com/erusev/parsedown) for individual posts on a case-by-case basis. Markdown can be activated using a toggle in the post editor
 submit box. When enabled, it replaces the WordPress post editor with CodeMirror in Markdown mode.
 
+== Screenshots ==
+
+1. Parsedown Party in the post editor.
+
 == Frequently Asked Questions ==
 
 = If I turn this on for a post, can I go back to HTML later if I change my mind? =
