@@ -80,14 +80,23 @@ class PluginTest extends WP_UnitTestCase {
 			'quicktags' => true,
 		];
 
+		$GLOBALS['pagenow'] = 'post.php';
 		$s = $this->plugin->parseEditorSettings( $settings );
 		$this->assertTrue( $s['wpautop'] );
 		$this->assertTrue( $s['media_buttons'] );
 		$this->assertTrue( $s['tinymce'] );
 		$this->assertTrue( $s['quicktags'] );
 
+		$GLOBALS['pagenow'] = 'revisions.php';
 		$GLOBALS['post'] = $this->factory()->post->create_and_get();
 		update_post_meta( $GLOBALS['post']->ID, $this->plugin::METAKEY, 1 );
+		$s = $this->plugin->parseEditorSettings( $settings );
+		$this->assertTrue( $s['wpautop'] );
+		$this->assertTrue( $s['media_buttons'] );
+		$this->assertTrue( $s['tinymce'] );
+		$this->assertTrue( $s['quicktags'] );
+
+		$GLOBALS['pagenow'] = 'post.php';
 		$s = $this->plugin->parseEditorSettings( $settings );
 		$this->assertFalse( $s['wpautop'] );
 		$this->assertFalse( $s['media_buttons'] );
@@ -96,11 +105,18 @@ class PluginTest extends WP_UnitTestCase {
 	}
 
 	public function test_overrideEditor() {
+		$GLOBALS['pagenow'] = 'post.php';
 		$this->plugin->overrideEditor();
 		$this->assertEmpty( wp_scripts()->registered['code-editor']->extra );
 
+		$GLOBALS['pagenow'] = 'revisions.php';
 		$GLOBALS['post'] = $this->factory()->post->create_and_get();
 		update_post_meta( $GLOBALS['post']->ID, $this->plugin::METAKEY, 1 );
+		$this->assertEmpty( wp_scripts()->registered['code-editor']->extra );
+		$this->plugin->overrideEditor();
+		$this->assertEmpty( wp_scripts()->registered['code-editor']->extra );
+
+		$GLOBALS['pagenow'] = 'post.php';
 		$this->plugin->overrideEditor();
 		$this->assertContains( 'markdown', wp_scripts()->registered['code-editor']->extra['after'][2] );
 	}

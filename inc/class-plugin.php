@@ -19,6 +19,11 @@ class Plugin {
 	private $parsedown;
 
 	/**
+	 * @var array
+	 */
+	private $supportedPages = [ 'post.php' ];
+
+	/**
 	 * @return Plugin
 	 */
 	static public function init() {
@@ -131,7 +136,8 @@ class Plugin {
 	 * @return array
 	 */
 	public function parseEditorSettings( $settings ) {
-		if ( $this->useMarkdownForPost() ) {
+		global $pagenow;
+		if ( in_array( $pagenow, $this->supportedPages, true ) && $this->useMarkdownForPost() ) {
 			$settings['wpautop'] = false;
 			$settings['media_buttons'] = false;
 			$settings['tinymce'] = false;
@@ -146,7 +152,8 @@ class Plugin {
 	 * @see https://make.wordpress.org/core/2017/10/22/code-editing-improvements-in-wordpress-4-9/
 	 */
 	public function overrideEditor() {
-		if ( $this->useMarkdownForPost() ) {
+		global $pagenow;
+		if ( in_array( $pagenow, $this->supportedPages, true ) && $this->useMarkdownForPost() ) {
 			$settings = wp_enqueue_code_editor( [ 'type' => 'text/x-markdown' ] );
 			if ( false === $settings ) {
 				// Bail if user disabled CodeMirror.
