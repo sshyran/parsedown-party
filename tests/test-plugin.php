@@ -22,7 +22,7 @@ class PluginTest extends WP_UnitTestCase {
 	}
 
 	public function test_init() {
-		$instance = $this->plugin::init();
+		$instance = \Parsedownparty\Plugin::init();
 		$this->assertTrue( $instance instanceof \Parsedownparty\Plugin );
 	}
 
