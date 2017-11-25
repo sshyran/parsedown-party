@@ -11,6 +11,8 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.en.html
 
 Markdown editing for WordPress.
 
+[![Build Status](https://travis-ci.org/connerbw/parsedownparty.svg?branch=master)](https://travis-ci.org/connerbw/parsedownparty)
+
 == Description ==
 
 This plugin lets you use [Markdown](https://github.com/erusev/parsedown) for individual posts on a case-by-case basis. Markdown can be activated using a toggle in the post editor

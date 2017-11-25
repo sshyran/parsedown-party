@@ -11,6 +11,8 @@
 
 Markdown editing for WordPress.
 
+[![Build Status](https://travis-ci.org/connerbw/parsedownparty.svg?branch=master)](https://travis-ci.org/connerbw/parsedownparty)
+
 
 ## Description 
 
