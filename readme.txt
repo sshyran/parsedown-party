@@ -26,6 +26,10 @@ Yes.
 
 Yes.
 
+= I'm a software developer, how can I help? =
+
+[This plugin is on GitHub!](https://github.com/connerbw/parsedownparty)
+
 == Changelog ==
 
 = 1.0.0  =
