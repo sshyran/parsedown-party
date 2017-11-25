@@ -27,6 +27,9 @@
   "require-dev": {
     "humanmade/coding-standards": "^0.2",
     "phpunit/phpunit": "^5.7",
+    "phpunit/php-token-stream": "1.4.*",
+    "doctrine/instantiator": "1.0.*",
+    "phpdocumentor/reflection-docblock": "3.3.*",
     "wpreadme2markdown/wp2md": "^3.0"
   },
   "scripts": {
