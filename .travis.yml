@@ -8,24 +8,42 @@ branches:
   only:
   - master
 php:
-- '7.1'
-- '7.0'
-- '5.6'
+  - '7.1'
+  - '7.0'
+  - '5.6'
 env:
-- WP_VERSION=latest
+  - WP_VERSION=latest
 matrix:
   fast_finish: true
 cache:
   apt: true
   directories:
-  - "$HOME/.composer/cache"
-  - vendor
+    - "$HOME/.composer/cache"
+    - vendor
 install:
-- composer install
+  - composer install
 before_script:
-- bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+  - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
 script:
-- vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml
-- vendor/bin/phpcs --standard=phpcs.ruleset.xml *.php inc/ bin/
+  - vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml
+  - vendor/bin/phpcs --standard=phpcs.ruleset.xml *.php inc/ bin/
 after_success:
-- bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)
+before_deploy:
+  - export TRAVIS_PROJECT_SLUG="$(basename $TRAVIS_BUILD_DIR)"
+  - composer install --no-dev --optimize-autoloader
+  - cd ../
+  - zip -9 -ry $TRAVIS_BUILD_DIR/$TRAVIS_PROJECT_SLUG-$TRAVIS_TAG.zip $TRAVIS_PROJECT_SLUG
+    -x *.git* *assets/src/\* *bin/\* *node_modules/\* *test/\* *tests/\* *.editorconfig* *.gitattributes*
+    *.github* *.gitignore* *.phpstorm.meta.php* *.travis.yml* *.tx* *package-lock.json* *phpcs.ruleset.xml*
+    *phpunit.xml* *webpack.mix.js* *yarn.lock*
+  - cd $TRAVIS_BUILD_DIR
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: H55m2qM8/3mWXcYIUtYSsIToOoifT/zB74Suoawy9XfTiBlHacFEek1Lt97ksIDnyIICZKV1XQA3jAwSF3gfnGNYNPe7mrEU8eBXlYHOF7ozH6kAyrowiq69H7GwO5g33CpR5dvqFT/nOQbnXlT6GYkEh0+WFZXgdGD3O2dhczitbCjpDhilq34R7DKizhYqTgJgM/HI5Ur9jh/tL2udfKLoi0stQgds/rZt3I7KHsDSP3FStIdoXE/6PsRZDsbfAxNzM7598HaqH4bUwFpdSKKaVKeekNafqZOuW7RI+0wLJxcnw1wTsWDaa9N69K9lHYr26Gl9pvmiPHJhKxv40izrYMB32FESbKMSrNv9bYf+O4E8wuUREEBVQgWD3kOwl5H3ul9KZ5pxsmdnTbcKErZFmUo7m4x/osrNaAGO3J4bqHz3GNPq7QhB+pM8iNZO4pCZ/fbosRrx6svwZDS2MyoqC8F0L8dx8lR9w6FW0NO54ogEB0vcNXnTZR6gbnMJlKXjBnP43U5+ekzBnwiTeeBhpuayEbWUuE+51rGz8eLzuFljBbvkZPiURykZTXaR0ogyxX8sgQackHOPx881iS/EYpuJtZFcX31/RN7BTrTXwVZ2mG22OwrJYJbRC4+RCbiD46Whlqnv+un627ug5K2fiqa88Lf34LO10u9UV4w=
+  file: "parsedownparty-$TRAVIS_TAG.zip"
+  on:
+    tags: true
+    repo: connerbw/parsedownparty
