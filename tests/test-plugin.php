@@ -1,5 +1,7 @@
 <?php
 
+use \Parsedownparty\Plugin;
+
 class PluginTest extends WP_UnitTestCase {
 
 	/**
@@ -18,11 +20,11 @@ class PluginTest extends WP_UnitTestCase {
 			->method( 'parse' )
 			->willReturn( 'OK!' );
 
-		$this->plugin = new \Parsedownparty\Plugin( $stub );
+		$this->plugin = new Plugin( $stub );
 	}
 
 	public function test_init() {
-		$instance = \Parsedownparty\Plugin::init();
+		$instance = Plugin::init();
 		$this->assertTrue( $instance instanceof \Parsedownparty\Plugin );
 	}
 
@@ -34,7 +36,7 @@ class PluginTest extends WP_UnitTestCase {
 	public function test_useMarkdownForPost() {
 		$post = $this->factory()->post->create_and_get();
 		$this->assertFalse( $this->plugin->useMarkdownForPost( $post ) );
-		update_post_meta( $post->ID, $this->plugin::METAKEY, 1 );
+		update_post_meta( $post->ID, Plugin::METAKEY, 1 );
 		$this->assertTrue( $this->plugin->useMarkdownForPost( $post ) );
 	}
 
@@ -42,7 +44,7 @@ class PluginTest extends WP_UnitTestCase {
 		$GLOBALS['id'] = $this->factory()->post->create_and_get()->ID;
 		unset( $GLOBALS['post'] );
 		$this->assertFalse( $this->plugin->useMarkdownForPost() );
-		update_post_meta( $GLOBALS['id'], $this->plugin::METAKEY, 1 );
+		update_post_meta( $GLOBALS['id'], Plugin::METAKEY, 1 );
 		$this->assertTrue( $this->plugin->useMarkdownForPost() );
 	}
 
@@ -60,14 +62,14 @@ class PluginTest extends WP_UnitTestCase {
 		$post = $this->factory()->post->create_and_get();
 
 		$nonce = wp_create_nonce( $post->ID );
-		$_POST[ $this->plugin::NONCE ] = $nonce;
-		$_POST[ $this->plugin::METAKEY ] = 1;
+		$_POST[ Plugin::NONCE ] = $nonce;
+		$_POST[ Plugin::METAKEY ] = 1;
 		$this->plugin->saveMarkdownMeta( $post->ID );
 		$this->assertTrue( $this->plugin->useMarkdownForPost( $post ) );
 
 		$nonce = wp_create_nonce( $post->ID );
-		$_POST[ $this->plugin::NONCE ] = $nonce;
-		$_POST[ $this->plugin::METAKEY ] = 0;
+		$_POST[ Plugin::NONCE ] = $nonce;
+		$_POST[ Plugin::METAKEY ] = 0;
 		$this->plugin->saveMarkdownMeta( $post->ID );
 		$this->assertFalse( $this->plugin->useMarkdownForPost( $post ) );
 	}
@@ -89,7 +91,7 @@ class PluginTest extends WP_UnitTestCase {
 
 		$GLOBALS['pagenow'] = 'revisions.php';
 		$GLOBALS['post'] = $this->factory()->post->create_and_get();
-		update_post_meta( $GLOBALS['post']->ID, $this->plugin::METAKEY, 1 );
+		update_post_meta( $GLOBALS['post']->ID, Plugin::METAKEY, 1 );
 		$s = $this->plugin->parseEditorSettings( $settings );
 		$this->assertTrue( $s['wpautop'] );
 		$this->assertTrue( $s['media_buttons'] );
@@ -111,7 +113,7 @@ class PluginTest extends WP_UnitTestCase {
 
 		$GLOBALS['pagenow'] = 'revisions.php';
 		$GLOBALS['post'] = $this->factory()->post->create_and_get();
-		update_post_meta( $GLOBALS['post']->ID, $this->plugin::METAKEY, 1 );
+		update_post_meta( $GLOBALS['post']->ID, Plugin::METAKEY, 1 );
 		$this->assertEmpty( wp_scripts()->registered['code-editor']->extra );
 		$this->plugin->overrideEditor();
 		$this->assertEmpty( wp_scripts()->registered['code-editor']->extra );
@@ -126,7 +128,7 @@ class PluginTest extends WP_UnitTestCase {
 		$this->assertEquals( 'MOCKED!', $content );
 
 		$GLOBALS['post'] = $this->factory()->post->create_and_get();
-		update_post_meta( $GLOBALS['post']->ID, $this->plugin::METAKEY, 1 );
+		update_post_meta( $GLOBALS['post']->ID, Plugin::METAKEY, 1 );
 		$content = $this->plugin->parseTheContent( 'MOCKED!' );
 		$this->assertEquals( 'OK!', $content );
 	}
