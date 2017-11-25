@@ -50,10 +50,20 @@ class PluginTest extends WP_UnitTestCase {
 
 	public function test_createMarkdownLink() {
 		$post = $this->factory()->post->create_and_get();
+
+		update_post_meta( $post->ID, Plugin::METAKEY, 1 );
 		ob_start();
 		$this->plugin->createMarkdownLink( $post );
 		$output = ob_get_clean();
 		$this->assertContains( '<span class="dashicons dashicons-editor-code"></span>', $output );
+		$this->assertContains( 'Disable', $output );
+
+		delete_post_meta( $post->ID, Plugin::METAKEY );
+		ob_start();
+		$this->plugin->createMarkdownLink( $post );
+		$output = ob_get_clean();
+		$this->assertContains( '<span class="dashicons dashicons-editor-code"></span>', $output );
+		$this->assertContains( 'Enable', $output );
 	}
 
 	public function test_saveMarkdownMeta() {
