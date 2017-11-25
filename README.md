@@ -26,9 +26,9 @@ submit box. When enabled, it replaces the WordPress post editor with CodeMirror 
 Yes.
 
 
-### Does this Plugin work with Pressbooks? 
+### Is this Plugin compatible with Pressbooks? 
 
-Oh yeah!
+Yes.
 
 
 ### I'm a software developer, how can I help? 
