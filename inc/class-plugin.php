@@ -1,15 +1,15 @@
 <?php
 
-namespace Kizu514;
+namespace Parsedownparty;
 
-class ParsedownParty {
+class Plugin {
 
 	const METAKEY = 'kizu514_use_markdown';
 
-	const NONCE = '_kizu514_parsedown_pary';
+	const NONCE = '_kizu514_parsedown_party';
 
 	/**
-	 * @var ParsedownParty
+	 * @var Plugin
 	 */
 	private static $instance = null;
 
@@ -19,7 +19,7 @@ class ParsedownParty {
 	private $parsedown;
 
 	/**
-	 * @return ParsedownParty
+	 * @return Plugin
 	 */
 	static public function init() {
 		if ( is_null( self::$instance ) ) {
@@ -31,19 +31,17 @@ class ParsedownParty {
 	}
 
 	/**
-	 * @param ParsedownParty $obj
+	 * @param Plugin $obj
 	 */
-	static public function hooks( ParsedownParty $obj ) {
+	static public function hooks( Plugin $obj ) {
 		add_action( 'post_submitbox_misc_actions', [ $obj, 'createMarkdownLink' ] );
-		add_action( 'save_post', [ $obj, 'saveMarkdownMeta' ], 10, 3 );
-		add_filter( 'wp_editor_settings', [ $obj, 'parseEditorSettings' ], 10, 2 );
+		add_action( 'save_post', [ $obj, 'saveMarkdownMeta' ] );
+		add_filter( 'wp_editor_settings', [ $obj, 'parseEditorSettings' ] );
 		add_action( 'admin_enqueue_scripts', [ $obj, 'overrideEditor' ] );
-		add_filter( 'the_content', [ $obj, 'parseContent' ], 9 );
+		add_filter( 'the_content', [ $obj, 'parseTheContent' ], 9 );
 	}
 
 	/**
-	 * ParsedownParty constructor.
-	 *
 	 * @param \ParsedownExtra $parsedown
 	 */
 	public function __construct( $parsedown ) {
@@ -51,6 +49,8 @@ class ParsedownParty {
 	}
 
 	/**
+	 * Use markdown for post?
+	 *
 	 * @param \WP_Post $post
 	 *
 	 * @return bool
@@ -71,6 +71,8 @@ class ParsedownParty {
 	}
 
 	/**
+	 * Create a markdown activation link in the post editor submit box
+	 *
 	 * @see https://developer.wordpress.org/resource/dashicons/
 	 *
 	 * @param \WP_Post $post
@@ -84,7 +86,7 @@ class ParsedownParty {
 			<div class="misc-pub-section">
 				<span class="dashicons dashicons-editor-code"></span> Markdown:
 				<a href="javascript:{}"
-				   onclick="document.getElementById('<?php echo self::METAKEY; ?>').value=0;document.getElementById('post').submit(); return false;"><?php _e( 'Disable' ) ?></a>
+				   onclick="document.getElementById('<?php echo self::METAKEY; ?>').value = 0; document.getElementById('post').submit(); return false;"><?php _e( 'Disable' ) ?></a>
 			</div>
 			<?php
 		} else {
@@ -92,18 +94,18 @@ class ParsedownParty {
 			<div class="misc-pub-section">
 				<span class="dashicons dashicons-editor-code"></span> Markdown:
 				<a href="javascript:{}"
-				   onclick="document.getElementById('<?php echo self::METAKEY; ?>').value=1;document.getElementById('post').submit(); return false;"><?php _e( 'Enable' ) ?></a>
+				   onclick="document.getElementById('<?php echo self::METAKEY; ?>').value = 1; document.getElementById('post').submit(); return false;"><?php _e( 'Enable' ) ?></a>
 			</div>
 			<?php
 		}
 	}
 
 	/**
+	 * Save markdown post meta
+	 *
 	 * @param int $post_id Post ID.
-	 * @param \WP_Post $post Post object.
-	 * @param bool $update Whether this is an existing post being updated or not.
 	 */
-	public function saveMarkdownMeta( $post_id, $post, $update ) {
+	public function saveMarkdownMeta( $post_id ) {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
@@ -122,12 +124,13 @@ class ParsedownParty {
 	}
 
 	/**
+	 * If markdown, then disable most of the post editor settings
+	 *
 	 * @param array $settings
-	 * @param string $editor_id
 	 *
 	 * @return array
 	 */
-	public function parseEditorSettings( $settings, $editor_id ) {
+	public function parseEditorSettings( $settings ) {
 		if ( $this->useMarkdownForPost() ) {
 			$settings['wpautop'] = false;
 			$settings['media_buttons'] = false;
@@ -138,6 +141,8 @@ class ParsedownParty {
 	}
 
 	/**
+	 * If markdown, then replace the post editor with CodeMirror configured for markdown
+	 *
 	 * @see https://make.wordpress.org/core/2017/10/22/code-editing-improvements-in-wordpress-4-9/
 	 */
 	public function overrideEditor() {
@@ -155,11 +160,13 @@ class ParsedownParty {
 	}
 
 	/**
+	 * If markdown, then parse the_content using Parsedown
+	 *
 	 * @param string $content
 	 *
 	 * @return string
 	 */
-	public function parseContent( $content ) {
+	public function parseTheContent( $content ) {
 		if ( $this->useMarkdownForPost() ) {
 			$content = $this->parsedown->parse( $content );
 		}
