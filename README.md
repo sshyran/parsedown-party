@@ -1,4 +1,8 @@
-# Parsedown Party 
+# Parsedown Party
+
+Markdown editing for WordPress.
+
+[![Build Status](https://travis-ci.org/connerbw/parsedownparty.svg?branch=master)](https://travis-ci.org/connerbw/parsedownparty) [![Code Coverage](https://codecov.io/gh/connerbw/parsedownparty/branch/master/graph/badge.svg)](https://codecov.io/gh/connerbw/parsedownparty) 
 
 **Contributors:** conner_bw  
 **Tags:** markdown, parsedown  
@@ -8,11 +12,6 @@
 **Stable tag:** trunk  
 **License:** GPLv2  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.en.html  
-
-Markdown editing for WordPress.
-
-[![Build Status](https://travis-ci.org/connerbw/parsedownparty.svg?branch=master)](https://travis-ci.org/connerbw/parsedownparty) [![Code Coverage](https://codecov.io/gh/connerbw/parsedownparty/branch/master/graph/badge.svg)](https://codecov.io/gh/connerbw/parsedownparty)
-
 
 ## Description 
 
