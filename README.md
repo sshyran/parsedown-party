@@ -1,6 +1,6 @@
 # Parsedown Party
 
-[![Build Status](https://travis-ci.org/connerbw/parsedownparty.svg?branch=master)](https://travis-ci.org/connerbw/parsedownparty) [![Code Coverage](https://codecov.io/gh/connerbw/parsedownparty/branch/master/graph/badge.svg)](https://codecov.io/gh/connerbw/parsedownparty) 
+[![Build Status](https://travis-ci.org/connerbw/parsedownparty.svg?branch=master)](https://travis-ci.org/connerbw/parsedownparty) [![Code Coverage](https://codecov.io/gh/connerbw/parsedownparty/branch/master/graph/badge.svg)](https://codecov.io/gh/connerbw/parsedownparty) [![Packagist](https://img.shields.io/packagist/v/connerbw/parsedownparty.svg)](https://packagist.org/packages/connerbw/parsedownparty)
 
 **Contributors:** conner_bw  
 **Tags:** markdown, parsedown  
