@@ -31,9 +31,7 @@ Yes.
 
 Yes. Add the following line to your theme's `functions.php` (or another suitable place):
 
-```
-add_filter( 'parsedownparty_autoenable', '__return_true' );
-```
+`add_filter( 'parsedownparty_autoenable', '__return_true' );`
 
 = Is this Plugin compatible with Pressbooks? =
 
