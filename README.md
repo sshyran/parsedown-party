@@ -56,6 +56,10 @@ The philosophy behind this plugin is: Take a best of breed [Markdown Parser](htt
 ## Changelog 
 
 
+### 1.0.2 
+Update Parsedown to version 1.7.1
+
+
 ### 1.0.1 
 Add `parsedownparty_autoenable` filter to allow Markdown to be enabled by default. 
 
