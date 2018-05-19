@@ -104,7 +104,7 @@ class Plugin {
 			<div class="misc-pub-section">
 				<span class="dashicons dashicons-editor-code"></span> Markdown:
 				<a href="javascript:{}"
-				   onclick="document.getElementById('<?php echo self::METAKEY; ?>').value = 0; document.getElementById('post').submit(); return false;"><?php _e( 'Disable' ) ?></a>
+				   onclick="document.getElementById('<?php echo self::METAKEY; ?>').value = 0; document.getElementById('post').submit(); return false;"><?php _e( 'Disable' ); ?></a>
 			</div>
 			<?php
 		} else {
@@ -112,7 +112,7 @@ class Plugin {
 			<div class="misc-pub-section">
 				<span class="dashicons dashicons-editor-code"></span> Markdown:
 				<a href="javascript:{}"
-				   onclick="document.getElementById('<?php echo self::METAKEY; ?>').value = 1; document.getElementById('post').submit(); return false;"><?php _e( 'Enable' ) ?></a>
+				   onclick="document.getElementById('<?php echo self::METAKEY; ?>').value = 1; document.getElementById('post').submit(); return false;"><?php _e( 'Enable' ); ?></a>
 			</div>
 			<?php
 		}
@@ -167,7 +167,10 @@ class Plugin {
 	public function overrideEditor() {
 		global $pagenow;
 		if ( in_array( $pagenow, $this->supportedPages, true ) && $this->useMarkdownForPost() ) {
-			$settings = wp_enqueue_code_editor( [ 'type' => 'text/x-markdown' ] );
+			$args = [
+				'type' => 'text/x-markdown',
+			];
+			$settings = wp_enqueue_code_editor( $args );
 			if ( false === $settings ) {
 				// Bail if user disabled CodeMirror.
 				return;
