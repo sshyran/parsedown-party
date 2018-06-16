@@ -133,6 +133,12 @@ class Plugin {
 	 * @param \WP_Post $post Post object.
 	 */
 	public function saveMarkdownMeta( $post_id, $post ) {
+
+		delete_transient( self::METAKEY . "_{$post_id}" );
+		if ( $post->post_type === 'revision' ) {
+			delete_transient( self::METAKEY . "_{$post->post_parent}" );
+		}
+
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
@@ -143,7 +149,6 @@ class Plugin {
 			return;
 		}
 
-		delete_transient( self::METAKEY . "_{$post_id}" );
 		$use_markdown_old = get_post_meta( $post_id, self::METAKEY, true );
 		$use_markdown = ! empty( $_POST[ self::METAKEY ] ) ? 1 : 0;
 		if ( (string) $use_markdown_old !== (string) $use_markdown ) {
@@ -217,19 +222,32 @@ class Plugin {
 	 * @return string
 	 */
 	public function parseTheContent( $content ) {
+
 		$post = $this->getPost();
 		$post_id = $post ? $post->ID : 0;
 		$transient = self::METAKEY . "_{$post_id}";
-		if ( $this->useMarkdownForPost() ) {
+		$use_markdown = $this->useMarkdownForPost();
+
+		// Preview
+		if ( is_preview() ) {
+			if ( $use_markdown ) {
+				return $this->parsedown->parse( $content );
+			} else {
+				return $content;
+			}
+		}
+
+		if ( $use_markdown ) {
 			$cached_content = get_transient( $transient );
 			if ( $post_id && $cached_content ) {
 				return $cached_content;
 			}
 			$content = $this->parsedown->parse( $content );
 			set_transient( $transient, $content );
-		} else {
-			delete_transient( $transient );
+			return $content;
 		}
+
+		delete_transient( $transient );
 		return $content;
 	}
 

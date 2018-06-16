@@ -148,13 +148,20 @@ class PluginTest extends WP_UnitTestCase {
 	public function test_parseTheContent() {
 		$GLOBALS['post'] = $this->factory()->post->create_and_get();
 		update_post_meta( $GLOBALS['post']->ID, Plugin::METAKEY, 1 );
-		$content = $this->plugin->parseTheContent( 'MOCKED!', $GLOBALS['post']->ID );
+		$content = $this->plugin->parseTheContent( 'MOCKED!' );
 		$this->assertEquals( 'OK! (HTML)', $content );
-		$this->assertEquals( $content, get_transient( Plugin::METAKEY . "_{$GLOBALS['post']->ID}" ) );
+		$this->assertEquals( $content, get_transient( Plugin::METAKEY . "_{$GLOBALS['post']->ID}" ) ); // Cached
 
 		update_post_meta( $GLOBALS['post']->ID, Plugin::METAKEY, 0 );
-		$content = $this->plugin->parseTheContent( 'MOCKED!', $GLOBALS['post']->ID );
+		$content = $this->plugin->parseTheContent( 'MOCKED!'  );
 		$this->assertEquals( 'MOCKED!', $content );
-		$this->assertEmpty( get_transient( Plugin::METAKEY . "_{$GLOBALS['post']->ID}" ) );
+		$this->assertEmpty( get_transient( Plugin::METAKEY . "_{$GLOBALS['post']->ID}" ) ); // Cache deleted
+
+		global $wp_query;
+		$wp_query->is_preview = true;
+		update_post_meta( $GLOBALS['post']->ID, Plugin::METAKEY, 1 );
+		$content = $this->plugin->parseTheContent( 'MOCKED!' );
+		$this->assertEquals( 'OK! (HTML)', $content );
+		$this->assertEmpty( get_transient( Plugin::METAKEY . "_{$GLOBALS['post']->ID}" ) ); // No cache
 	}
 }
