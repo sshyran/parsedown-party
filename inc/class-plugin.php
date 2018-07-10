@@ -140,7 +140,7 @@ class Plugin {
 			delete_transient( self::METAKEY . "_{$post->post_parent}" );
 		}
 
-		// Bail?
+		// Should we abort?
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
