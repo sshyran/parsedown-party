@@ -134,11 +134,13 @@ class Plugin {
 	 */
 	public function saveMarkdownMeta( $post_id, $post ) {
 
+		// Markdown to HTML conversions are cached in transients, delete them
 		delete_transient( self::METAKEY . "_{$post_id}" );
 		if ( $post->post_type === 'revision' ) {
 			delete_transient( self::METAKEY . "_{$post->post_parent}" );
 		}
 
+		// Bail?
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
@@ -149,10 +151,11 @@ class Plugin {
 			return;
 		}
 
+		// If $use_markdown_old and $use_markdown are not the same, then we are converting from HTML to Markdown (or vice versa)
 		$use_markdown_old = get_post_meta( $post_id, self::METAKEY, true );
 		$use_markdown = ! empty( $_POST[ self::METAKEY ] ) ? 1 : 0;
 		if ( (string) $use_markdown_old !== (string) $use_markdown ) {
-			static $recursion = false;
+			static $recursion = false; // Set a static variable to fix infinite hook loop
 			if ( ! $recursion ) {
 				$recursion = true;
 				if ( $use_markdown ) {
@@ -233,20 +236,25 @@ class Plugin {
 			if ( $use_markdown ) {
 				return $this->parsedown->parse( $content );
 			} else {
+				// This preview is not markdown, return unchanged
 				return $content;
 			}
 		}
 
+		// Post
 		if ( $use_markdown ) {
+			// Markdown to HTML conversions are cached in transients, try to use it
 			$cached_content = get_transient( $transient );
 			if ( $post_id && $cached_content ) {
 				return $cached_content;
+			} else {
+				$content = $this->parsedown->parse( $content );
+				set_transient( $transient, $content );
+				return $content;
 			}
-			$content = $this->parsedown->parse( $content );
-			set_transient( $transient, $content );
-			return $content;
 		}
 
+		// This post is not markdown, delete the cache and return unchanged
 		delete_transient( $transient );
 		return $content;
 	}
