@@ -163,5 +163,11 @@ class PluginTest extends WP_UnitTestCase {
 		$content = $this->plugin->parseTheContent( 'MOCKED!' );
 		$this->assertEquals( 'OK! (HTML)', $content );
 		$this->assertEmpty( get_transient( Plugin::METAKEY . "_{$GLOBALS['post']->ID}" ) ); // No cache
+
+		$wp_query->is_preview = true;
+		update_post_meta( $GLOBALS['post']->ID, Plugin::METAKEY, 0 );
+		$content = $this->plugin->parseTheContent( 'MOCKED!'  );
+		$this->assertEquals( 'MOCKED!', $content );
+		$this->assertEmpty( get_transient( Plugin::METAKEY . "_{$GLOBALS['post']->ID}" ) ); // No Cache, no Markdown
 	}
 }
