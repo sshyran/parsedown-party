@@ -112,7 +112,7 @@ class Plugin {
 			<div class="misc-pub-section">
 				<span class="dashicons dashicons-editor-code"></span> Markdown:
 				<a href="javascript:{}"
-				   onclick="document.getElementById('<?php echo self::METAKEY; ?>').value = 0; document.getElementById('post').submit(); return false;"><?php _e( 'Disable' ); ?></a>
+				onclick="document.getElementById('<?php echo self::METAKEY; ?>').value = 0; document.getElementById('post').submit(); return false;"><?php _e( 'Disable' ); ?></a>
 			</div>
 			<?php
 		} else {
@@ -120,7 +120,7 @@ class Plugin {
 			<div class="misc-pub-section">
 				<span class="dashicons dashicons-editor-code"></span> Markdown:
 				<a href="javascript:{}"
-				   onclick="document.getElementById('<?php echo self::METAKEY; ?>').value = 1; document.getElementById('post').submit(); return false;"><?php _e( 'Enable' ); ?></a>
+				onclick="document.getElementById('<?php echo self::METAKEY; ?>').value = 1; document.getElementById('post').submit(); return false;"><?php _e( 'Enable' ); ?></a>
 			</div>
 			<?php
 		}
