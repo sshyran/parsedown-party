@@ -9,8 +9,22 @@ class PluginTest extends WP_UnitTestCase {
 	 */
 	protected $plugin;
 
+	protected $useBlockEditor = false;
+
+	/**
+	 * Block editor (Gutenberg) currently not supported
+	 *
+	 * @return bool
+	 */
+	public function useBlockEditor() {
+		return $this->useBlockEditor;
+	}
+
 	public function setUp() {
 		parent::setUp();
+
+		$this->useBlockEditor = false;
+		add_filter( 'use_block_editor_for_post', [ $this, 'useBlockEditor' ] );
 
 		$stub1 = $this
 			->getMockBuilder( '\ParsedownExtra' )
@@ -44,9 +58,15 @@ class PluginTest extends WP_UnitTestCase {
 		$this->assertFalse( $this->plugin->useMarkdownForPost( $post ) );
 		update_post_meta( $post->ID, Plugin::METAKEY, 1 );
 		$this->assertTrue( $this->plugin->useMarkdownForPost( $post ) );
+
+		// Auto enable
 		$new_post = $this->factory()->post->create_and_get();
 		add_filter( 'parsedownparty_autoenable', '__return_true' );
 		$this->assertTrue( $this->plugin->useMarkdownForPost( $post ) );
+
+		// Gutenberg currently not supported
+		$this->useBlockEditor = true;
+		$this->assertFalse( $this->plugin->useMarkdownForPost( $post ) );
 		remove_filter( 'parsedownparty_autoenable', '__return_true' );		
 	}
 
@@ -74,6 +94,13 @@ class PluginTest extends WP_UnitTestCase {
 		$output = ob_get_clean();
 		$this->assertContains( '<span class="dashicons dashicons-editor-code"></span>', $output );
 		$this->assertContains( 'Enable', $output );
+
+		// Gutenberg currently not supported
+		$this->useBlockEditor = true;
+		ob_start();
+		$this->plugin->createMarkdownLink( $post );
+		$output = ob_get_clean();
+		$this->assertEmpty( $output );
 	}
 
 	public function test_saveMarkdownMeta() {
@@ -91,6 +118,15 @@ class PluginTest extends WP_UnitTestCase {
 		$nonce = wp_create_nonce( $post->ID );
 		$_POST[ Plugin::NONCE ] = $nonce;
 		$_POST[ Plugin::METAKEY ] = 0;
+		$this->plugin->saveMarkdownMeta( $post->ID, $post );
+		$this->assertFalse( $this->plugin->useMarkdownForPost( $post ) );
+		$this->assertEquals( 'OK! (HTML)', get_post( $post->ID )->post_content );
+
+		// Gutenberg currently not supported
+		$this->useBlockEditor = true;
+		$nonce = wp_create_nonce( $post->ID );
+		$_POST[ Plugin::NONCE ] = $nonce;
+		$_POST[ Plugin::METAKEY ] = 1;
 		$this->plugin->saveMarkdownMeta( $post->ID, $post );
 		$this->assertFalse( $this->plugin->useMarkdownForPost( $post ) );
 		$this->assertEquals( 'OK! (HTML)', get_post( $post->ID )->post_content );
@@ -170,4 +206,38 @@ class PluginTest extends WP_UnitTestCase {
 		$this->assertEquals( 'MOCKED!', $content );
 		$this->assertEmpty( get_transient( Plugin::METAKEY . "_{$GLOBALS['post']->ID}" ) ); // No Cache, no Markdown
 	}
+
+
+	/**
+	 * @see https://github.com/connerbw/parsedownparty/issues/13
+	 * @see https://github.com/thephpleague/html-to-markdown/issues/165
+	 */
+	public function test_paragraphs_following_tables() {
+		$test = <<< EOF
+<p>line 1</p>
+<p>line 2</p>
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<tbody>
+<tr>
+<td style="width: 33.3333%;">d</td>
+<td style="width: 33.3333%;">d</td>
+<td style="width: 33.3333%;">d</td>
+</tr>
+<tr>
+<td style="width: 33.3333%;">d</td>
+<td style="width: 33.3333%;">d</td>
+<td style="width: 33.3333%;">d</td>
+</tr>
+</tbody>
+</table>
+<p>line 4</p>
+<p>line 5</p>
+EOF;
+
+		$c = new \League\HTMLToMarkdown\HtmlConverter( \Parsedownparty\Plugin::CONVERTER_OPTIONS );
+		$markdown = $c->convert( $test );
+		$this->assertNotContains( '</table>line 4', $markdown );
+		$this->assertContains( "</table>\n\nline 4\n\nline 5", $markdown );
+	}
+
 }
