@@ -18,7 +18,7 @@ Markdown editing for WordPress.
 
 This plugin lets you use [Markdown](https://github.com/erusev/parsedown) for individual posts on a case-by-case basis. [Markdown can be activated](https://github.com/thephpleague/html-to-markdown) using a toggle in the post editor submit box. When enabled, it replaces the WordPress post editor with [CodeMirror](https://make.wordpress.org/core/2017/10/22/code-editing-improvements-in-wordpress-4-9/) in Markdown mode.
 
-Works on posts using the [Classic Editor](https://en-ca.wordpress.org/plugins/classic-editor/). Gutenberg currently not supported.
+Works on posts using the [Classic Editor](https://en-ca.wordpress.org/plugins/classic-editor/). Gutenberg is currently not supported.
 
 
 ## Screenshots 
@@ -50,7 +50,7 @@ Yes. Add the following line to your theme's `functions.php` (or another suitable
 
 ### Does this plugin work with Gutenberg? 
 
-Not yet. It works on posts using the [Classic Editor](https://github.com/WordPress/classic-editor). The block editor currently not supported.
+Not yet. It works on posts using the [Classic Editor](https://github.com/WordPress/classic-editor). The block editor is currently not supported.
 
 
 ### I'm a software developer, how can I help? 
