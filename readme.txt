@@ -9,7 +9,7 @@ Stable tag: trunk
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.en.html
 
-[![Build Status](https://travis-ci.org/connerbw/parsedown-party.svg?branch=master)](https://travis-ci.org/connerbw/parsedownparty) [![Code Coverage](https://codecov.io/gh/connerbw/parsedownparty/branch/master/graph/badge.svg)](https://codecov.io/gh/connerbw/parsedownparty) [![Packagist](https://img.shields.io/packagist/v/connerbw/parsedownparty.svg)](https://packagist.org/packages/connerbw/parsedownparty)
+[![Build Status](https://travis-ci.org/connerbw/parsedown-party.svg?branch=master)](https://travis-ci.org/connerbw/parsedown-party) [![Code Coverage](https://codecov.io/gh/connerbw/parsedown-party/branch/master/graph/badge.svg)](https://codecov.io/gh/connerbw/parsedown-party) [![Packagist](https://img.shields.io/packagist/v/connerbw/parsedown-party.svg)](https://packagist.org/packages/connerbw/parsedown-party)
 
 Markdown editing for WordPress.
 
